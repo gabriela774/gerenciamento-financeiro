@@ -98,16 +98,38 @@ main { max-width: 1000px; margin: 0 auto; padding: 20px; }
 }
 .linha-lancamento button:hover { background: #4f8a68; }
 
+#cancelar-edicao {
+  background: var(--roxo-claro);
+  color: var(--roxo-escuro);
+  border: 1px solid var(--borda);
+}
+#cancelar-edicao:hover { background: var(--roxo); color: white; }
+
 .tabela { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; background: white; }
 th, td { border: 1px solid var(--borda); padding: 8px 10px; text-align: left; }
 th { background: var(--roxo-claro); color: var(--roxo-escuro); }
 tbody tr:nth-child(even) { background: #f7f5fb; }
+tbody tr:hover { background: var(--roxo-claro); }
 .num { text-align: right; }
 .tipo-entrada { color: var(--verde); }
 .tipo-saida { color: var(--rosa); }
 
-.acoes { text-align: center; width: 90px; }
+.acoes { text-align: center; width: 160px; white-space: nowrap; }
+.acoes button { font-family: inherit; font-size: .9rem; }
+.acoes button + button { margin-left: 6px; }
+
+.btn-editar {
+  background: white;
+  border: 1px solid var(--roxo);
+  color: var(--roxo-escuro);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.btn-editar:hover { background: var(--roxo); color: white; }
+.btn-editar:active { transform: scale(0.94); }
+
 .btn-excluir {
   background: white;
   border: 1px solid var(--rosa);

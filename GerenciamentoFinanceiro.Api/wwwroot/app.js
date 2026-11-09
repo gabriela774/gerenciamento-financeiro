@@ -5,6 +5,7 @@ const nomesMeses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
 
 let anoAtual;
 let mesAtual;
+let editandoId = null;
 
 async function carregarSaldo() {
   const resposta = await fetch("/api/Resumo/saldo");
@@ -81,14 +82,24 @@ async function carregarLancamentos() {
     linha.appendChild(celula(entrada ? "Entrada" : "Saída", entrada ? "tipo-entrada" : "tipo-saida"));
     linha.appendChild(celula(moeda.format(l.valor), "num"));
     linha.appendChild(celula(l.observacao || ""));
-        const acoes = document.createElement("td");
+
+    const acoes = document.createElement("td");
     acoes.className = "acoes";
-    const botao = document.createElement("button");
-    botao.type = "button";
-    botao.className = "btn-excluir";
-    botao.textContent = "Excluir";
-    botao.addEventListener("click", () => excluirLancamento(l.id));
-    acoes.appendChild(botao);
+
+    const botaoEditar = document.createElement("button");
+    botaoEditar.type = "button";
+    botaoEditar.className = "btn-editar";
+    botaoEditar.textContent = "Editar";
+    botaoEditar.addEventListener("click", () => iniciarEdicao(l));
+
+    const botaoExcluir = document.createElement("button");
+    botaoExcluir.type = "button";
+    botaoExcluir.className = "btn-excluir";
+    botaoExcluir.textContent = "Excluir";
+    botaoExcluir.addEventListener("click", () => excluirLancamento(l.id));
+
+    acoes.appendChild(botaoEditar);
+    acoes.appendChild(botaoExcluir);
     linha.appendChild(acoes);
     lista.appendChild(linha);
   });
@@ -120,23 +131,31 @@ document.getElementById("form-lancamento").addEventListener("submit", async (eve
     observacao: document.getElementById("observacao").value || null
   };
 
-  const resposta = await fetch("/api/Lancamentos", {
-    method: "POST",
+  const editando = editandoId !== null;
+  const url = editando ? `/api/Lancamentos/${editandoId}` : "/api/Lancamentos";
+
+  const resposta = await fetch(url, {
+    method: editando ? "PUT" : "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(lancamento)
   });
 
   if (!resposta.ok) {
-    alert("Não foi possível lançar: " + await lerErro(resposta));
+    alert("Não foi possível salvar: " + await lerErro(resposta));
     return;
   }
 
-  document.getElementById("valor").value = "";
-  document.getElementById("observacao").value = "";
-  document.getElementById("categoria").value = "";
+  if (editando) {
+    sairDaEdicao();
+  } else {
+    document.getElementById("valor").value = "";
+    document.getElementById("observacao").value = "";
+    document.getElementById("categoria").value = "";
+  }
 
   await atualizarTela();
 });
+
 async function mudarMes(delta) {
   let ano = anoAtual;
   let mes = mesAtual + delta;
@@ -154,8 +173,10 @@ async function mudarMes(delta) {
 
 document.getElementById("mes-anterior").addEventListener("click", () => mudarMes(-1));
 document.getElementById("mes-proximo").addEventListener("click", () => mudarMes(1));
+
 async function excluirLancamento(id) {
   if (!confirm("Excluir este lançamento? Isso não pode ser desfeito.")) return;
+  if (editandoId === id) sairDaEdicao();
 
   const resposta = await fetch(`/api/Lancamentos/${id}`, { method: "DELETE" });
   if (!resposta.ok) {
@@ -165,6 +186,34 @@ async function excluirLancamento(id) {
 
   await atualizarTela();
 }
+
+function iniciarEdicao(l) {
+  editandoId = l.id;
+  document.getElementById("data").value = l.data;
+  document.getElementById("tipo").value = l.tipo;
+  document.getElementById("categoria").value = l.categoriaId;
+  document.getElementById("valor").value = l.valor;
+  document.getElementById("observacao").value = l.observacao || "";
+
+  document.getElementById("botao-salvar").textContent = "Salvar";
+  document.getElementById("cancelar-edicao").hidden = false;
+  document.getElementById("form-lancamento").scrollIntoView({ behavior: "smooth" });
+}
+
+function sairDaEdicao() {
+  editandoId = null;
+  document.getElementById("data").value = new Date().toLocaleDateString("sv-SE");
+  document.getElementById("tipo").value = "saida";
+  document.getElementById("categoria").value = "";
+  document.getElementById("valor").value = "";
+  document.getElementById("observacao").value = "";
+
+  document.getElementById("botao-salvar").textContent = "Lançar";
+  document.getElementById("cancelar-edicao").hidden = true;
+}
+
+document.getElementById("cancelar-edicao").addEventListener("click", sairDaEdicao);
+
 async function iniciar() {
   try {
     document.getElementById("data").value = new Date().toLocaleDateString("sv-SE");

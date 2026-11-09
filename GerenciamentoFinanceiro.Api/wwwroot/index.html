@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Açaí da chefe</title>
   <link rel="icon" type="image/png" href="_Logotipo para loja de açai .png">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
   <header class="topo">
@@ -50,7 +50,8 @@
       </select>
       <input type="number" id="valor" step="0.01" min="0.01" placeholder="Valor" required>
       <input type="text" id="observacao" placeholder="Observação (opcional)" maxlength="500">
-      <button type="submit">Lançar</button>
+      <button type="submit" id="botao-salvar">Lançar</button>
+      <button type="button" id="cancelar-edicao" hidden>Cancelar</button>
     </form>
 
     <div class="tabela">
@@ -65,21 +66,11 @@
             <th></th>
           </tr>
         </thead>
-        <tbody id="lista">
-          <!-- Linhas de exemplo, o JavaScript vai substituir -->
-          <tr>
-            <td>18/10/2026</td><td>Vendas loja física</td>
-            <td class="tipo-entrada">Entrada</td><td class="num">R$ 500,00</td><td></td>
-          </tr>
-          <tr>
-            <td>17/10/2026</td><td>Insumos</td>
-            <td class="tipo-saida">Saída</td><td class="num">R$ 150,50</td><td>Compra de farinha</td>
-          </tr>
-        </tbody>
+        <tbody id="lista"></tbody>
       </table>
     </div>
   </main>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

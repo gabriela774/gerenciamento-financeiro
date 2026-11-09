@@ -60,4 +60,25 @@ public class LancamentosController : ControllerBase
         await _context.SaveChangesAsync();
         return NoContent();
     }
+        [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Atualizar(Guid id, LancamentoCreateDto dto)
+    {
+        var lancamento = await _context.Lancamentos.FindAsync(id);
+        if (lancamento is null)
+            return NotFound("Lançamento não encontrado.");
+
+        var categoriaExiste = await _context.Categorias.AnyAsync(c => c.Id == dto.CategoriaId);
+        if (!categoriaExiste)
+            return BadRequest("Categoria não encontrada.");
+
+        lancamento.Data = dto.Data;
+        lancamento.Tipo = dto.Tipo;
+        lancamento.CategoriaId = dto.CategoriaId;
+        lancamento.Origem = dto.Origem;
+        lancamento.Valor = dto.Valor;
+        lancamento.Observacao = dto.Observacao;
+
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
 }
