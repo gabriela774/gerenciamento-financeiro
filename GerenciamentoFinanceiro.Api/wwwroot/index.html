@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Açaí da chefe</title>
+  <link rel="icon" type="image/png" href="_Logotipo para loja de açai .png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topo">
+    <h1><img src="_Logotipo para loja de açai .png" alt="Açaí da chefe" class="logo"></h1>
+    <span>Açaí da Chefe</span>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card destaque">
+        <span class="rotulo">Saldo do Caixa</span>
+        <strong id="saldo">R$ 0,00</strong>
+      </div>
+      <div class="card">
+        <span class="rotulo">Entradas do mês</span>
+        <strong id="entradas">R$ 0,00</strong>
+      </div>
+      <div class="card">
+        <span class="rotulo">Saídas do mês</span>
+        <strong id="saidas">R$ 0,00</strong>
+      </div>
+      <div class="card">
+        <span class="rotulo">Resultado do mês</span>
+        <strong id="resultado">R$ 0,00</strong>
+      </div>
+    </section>
+
+    <section class="mes">
+      <button id="mes-anterior" type="button">◀</button>
+      <h2 id="mes-titulo">Carregando...</h2>
+      <button id="mes-proximo" type="button">▶</button>
+    </section>
+
+    <form id="form-lancamento" class="linha-lancamento">
+      <input type="date" id="data" required>
+      <select id="tipo" required>
+        <option value="saida">Saída</option>
+        <option value="entrada">Entrada</option>
+      </select>
+      <select id="categoria" required>
+        <option value="">Categoria</option>
+      </select>
+      <input type="number" id="valor" step="0.01" min="0.01" placeholder="Valor" required>
+      <input type="text" id="observacao" placeholder="Observação (opcional)" maxlength="500">
+      <button type="submit">Lançar</button>
+    </form>
+
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Categoria</th>
+            <th>Tipo</th>
+            <th class="num">Valor</th>
+            <th>Observação</th>
+          </tr>
+        </thead>
+        <tbody id="lista">
+          <!-- Linhas de exemplo, o JavaScript vai substituir -->
+          <tr>
+            <td>18/10/2026</td><td>Vendas loja física</td>
+            <td class="tipo-entrada">Entrada</td><td class="num">R$ 500,00</td><td></td>
+          </tr>
+          <tr>
+            <td>17/10/2026</td><td>Insumos</td>
+            <td class="tipo-saida">Saída</td><td class="num">R$ 150,50</td><td>Compra de farinha</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
