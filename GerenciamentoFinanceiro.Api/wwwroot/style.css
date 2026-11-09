@@ -106,3 +106,15 @@ tbody tr:nth-child(even) { background: #f7f5fb; }
 .num { text-align: right; }
 .tipo-entrada { color: var(--verde); }
 .tipo-saida { color: var(--rosa); }
+
+.acoes { text-align: center; width: 90px; }
+.btn-excluir {
+  background: white;
+  border: 1px solid var(--rosa);
+  color: var(--rosa);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.btn-excluir:hover { background: var(--rosa); color: white; }
+.btn-excluir:active { transform: scale(0.94); }

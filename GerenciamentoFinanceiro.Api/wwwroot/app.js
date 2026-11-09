@@ -67,7 +67,7 @@ async function carregarLancamentos() {
   lista.innerHTML = "";
 
   if (doMes.length === 0) {
-    lista.innerHTML = '<tr><td colspan="5">Nenhum lançamento neste mês.</td></tr>';
+    lista.innerHTML = '<tr><td colspan="6">Nenhum lançamento neste mês.</td></tr>';
     return;
   }
 
@@ -81,6 +81,15 @@ async function carregarLancamentos() {
     linha.appendChild(celula(entrada ? "Entrada" : "Saída", entrada ? "tipo-entrada" : "tipo-saida"));
     linha.appendChild(celula(moeda.format(l.valor), "num"));
     linha.appendChild(celula(l.observacao || ""));
+        const acoes = document.createElement("td");
+    acoes.className = "acoes";
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "btn-excluir";
+    botao.textContent = "Excluir";
+    botao.addEventListener("click", () => excluirLancamento(l.id));
+    acoes.appendChild(botao);
+    linha.appendChild(acoes);
     lista.appendChild(linha);
   });
 }
@@ -145,6 +154,17 @@ async function mudarMes(delta) {
 
 document.getElementById("mes-anterior").addEventListener("click", () => mudarMes(-1));
 document.getElementById("mes-proximo").addEventListener("click", () => mudarMes(1));
+async function excluirLancamento(id) {
+  if (!confirm("Excluir este lançamento? Isso não pode ser desfeito.")) return;
+
+  const resposta = await fetch(`/api/Lancamentos/${id}`, { method: "DELETE" });
+  if (!resposta.ok) {
+    alert("Não foi possível excluir: " + await lerErro(resposta));
+    return;
+  }
+
+  await atualizarTela();
+}
 async function iniciar() {
   try {
     document.getElementById("data").value = new Date().toLocaleDateString("sv-SE");

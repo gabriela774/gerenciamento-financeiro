@@ -48,5 +48,16 @@ public class LancamentosController : ControllerBase
         _context.Lancamentos.Add(lancamento);
         await _context.SaveChangesAsync();
         return CreatedAtAction(nameof(Listar), new { id = lancamento.Id }, lancamento);
+
+    }    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Excluir(Guid id)
+    {
+        var lancamento = await _context.Lancamentos.FindAsync(id);
+        if (lancamento is null)
+            return NotFound("Lançamento não encontrado.");
+
+        _context.Lancamentos.Remove(lancamento);
+        await _context.SaveChangesAsync();
+        return NoContent();
     }
 }
